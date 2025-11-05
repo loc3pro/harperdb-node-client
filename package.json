@@ -1,6 +1,6 @@
 {
   "name": "harperdb-node-client",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "High-performance HarperDB client for Node.js/TypeScript with connection pooling (keep-alive), query caching with auto-invalidation, bulk/parallel APIs, and GraphQL schema apply.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

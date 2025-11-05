@@ -356,9 +356,9 @@ const result = await db.applySchemaFromFile('schema.graphql', {
 console.log(result.data);
 // {
 //   schemasCreated: ['data'],
-//   tablesCreated: ['data.Whitelist', 'data.Admin', ...],
-//   attributesCreated: ['data.Whitelist.id', 'data.Whitelist.tokenId', ...],
-//   indexesCreated: ['data.Whitelist.tokenId', ...],
+//   tablesCreated: ['data.AllowList', 'data.Administrator', ...],
+//   attributesCreated: ['data.AllowList.id', 'data.AllowList.tokenRef', ...],
+//   indexesCreated: ['data.AllowList.tokenRef', ...],
 //   errors: []
 // }
 
@@ -404,21 +404,22 @@ The package automatically validates schema files before processing:
 
 **Example Schema File (schema.graphql):**
 ```graphql
-type Whitelist @table(database: "data") @export {
+type AllowList @table(database: "data") @export {
     id: ID @primaryKey @indexed
-    tokenId: String @indexed
-    path: String
-    requestIp: String
+    tokenRef: String @indexed
+    route: String
+    clientIp: String
+    note: String
     createdBy: String!
-    createdOn: Date
+    createdAt: Date
 }
 
-type Admin @table(database: "data") @export {
+type Administrator @table(database: "data") @export {
     id: ID @primaryKey @indexed
-    username: String! @indexed
-    password: String!
+    login: String! @indexed
+    secret: String!
     role: String!
-    status: String!
+    state: String!
 }
 ```
 

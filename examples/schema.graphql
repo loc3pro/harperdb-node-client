@@ -1,82 +1,82 @@
-type Whitelist @table(database: "data") @export {
+type AllowList @table(database: "data") @export {
     id: ID @primaryKey @indexed
-    tokenId: String @indexed
-    path: String
-    requestIp: String
-    reason: String
-    createdBy: String!
-    createdOn: Date
-    isDeleted: Boolean
-    lastUpdated: Date
-}
-
-type Admin @table(database: "data") @export {
-    id: ID @primaryKey @indexed
-    username: String! @indexed
-    password: String!
-    refreshToken: String
-    role: String!
-    status: String!
-    createdBy: String!
-    createdOn: Date
-    lastUpdated: Date
-}
-
-type Policy @table(database: "data") @export {
-    id: ID @primaryKey @indexed
-    banReasonId: String! @indexed
-    description: String
-    status: String! @indexed
-    ruleStructure: Any
-    lastUpdated: Date
-}
-
-type BanReason @table(database: "data") @export {
-    id: ID @primaryKey @indexed
-    description: String!
-    status: String!
-}
-
-type BannedToken @table(database: "data") @export {
-    tokenId: String @primaryKey @indexed
-    banReasonId: String!
-    bannedBy: String!
-    bannedOn: Date
+    tokenRef: String @indexed
+    route: String
+    clientIp: String
     note: String
+    createdBy: String!
+    createdAt: Date
+    isArchived: Boolean
+    updatedAt: Date
 }
 
-type TokenLog @table(database: "data", replicate: false) @export {
+type Administrator @table(database: "data") @export {
+    id: ID @primaryKey @indexed
+    login: String! @indexed
+    secret: String!
+    sessionKey: String
+    role: String!
+    state: String!
+    createdBy: String!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type AccessPolicy @table(database: "data") @export {
+    id: ID @primaryKey @indexed
+    reasonRef: String! @indexed
+    details: String
+    status: String! @indexed
+    rules: Any
+    updatedAt: Date
+}
+
+type Reason @table(database: "data") @export {
+    id: ID @primaryKey @indexed
+    label: String!
+    status: String!
+}
+
+type RevokedToken @table(database: "data") @export {
+    tokenKey: String @primaryKey @indexed
+    reasonRef: String!
+    revokedBy: String!
+    revokedOn: Date
+    comment: String
+}
+
+type AccessLog @table(database: "data", replicate: false) @export {
     id: Long @primaryKey
-    tokenId: String @indexed
-    userId: String
-    path: String
-    requestIp: String
-    deviceId: String
-    timestamp: Long @indexed
+    tokenKey: String @indexed
+    userRef: String
+    route: String
+    clientIp: String
+    deviceRef: String
+    occurredAt: Long @indexed
     region: String
-    expiredAt: Long @indexed
+    expiresAt: Long @indexed
 }
 
-type Token @table(database: "data", replicate: false) @export {
-    tokenId: String @primaryKey @indexed
+type ApiToken @table(database: "data", replicate: false) @export {
+    tokenKey: String @primaryKey @indexed
     concurrent: Int @indexed
     hits1min: Int @indexed
     hits5min: Int @indexed
     hits15min: Int @indexed
-    lastUpdated: Date @indexed
-    banReasonId: String!
-    bannedBy: String!
-    bannedOn: Date @indexed
-    note: String
-    userId: String @indexed
+    updatedAt: Date @indexed
+    reasonRef: String!
+    updatedBy: String!
+    updatedOn: Date @indexed
+    comment: String
+    userRef: String @indexed
 }
 
-type AuditTrail @table(database: "data", replicate: false) @export {
-    trailId: String @primaryKey @indexed
-    actionBy: String!
-    actionType: String!
-    objectName: String
-    objectId: String
-    additionalData: any
-    actionAt: Date! @indexed
+type AuditEvent @table(database: "data", replicate: false) @export {
+    eventId: String @primaryKey @indexed
+    actor: String!
+    action: String!
+    entity: String
+    entityId: String
+    payload: any
+    occurredOn: Date! @indexed
 }
