@@ -29,32 +29,11 @@ export class HarperDB extends HarperDBClient {
     }
 
     // Describe / List APIs
-    async describeTable(table: string, options?: QueryOptions & { schema?: string }): Promise<QueryResult<any>> {
-        const startTime = Date.now();
-        const response = await this.executeQuery('describe_table', {
-            schema: options?.schema || this.getSchema(),
-            table,
-        }, options);
-        return { data: (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
     async describeSchema(schema?: string, options?: QueryOptions): Promise<QueryResult<any>> {
         const startTime = Date.now();
         const target = schema || this.getSchema();
         const response = await this.executeQuery('describe_schema', { schema: target }, options);
         return { data: (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
-    async listSchemas(options?: QueryOptions): Promise<QueryResult<string[]>> {
-        const startTime = Date.now();
-        const response = await this.executeQuery('list_schemas', {}, options);
-        return { data: (response as any)?.schemas ?? (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
-    async listTables(schema?: string, options?: QueryOptions): Promise<QueryResult<string[]>> {
-        const startTime = Date.now();
-        const response = await this.executeQuery('list_tables', { schema: schema || this.getSchema() }, options);
-        return { data: (response as any)?.tables ?? (response as any), metadata: { executionTime: Date.now() - startTime } };
     }
 
     async describeAll(options?: QueryOptions): Promise<QueryResult<any>> {
@@ -64,33 +43,6 @@ export class HarperDB extends HarperDBClient {
     }
 
     // Search APIs
-    async searchByHash<T = any>(table: string, hashes: any[], options?: QueryOptions & { schema?: string; attributes?: string[] }): Promise<QueryResult<T[]>> {
-        const startTime = Date.now();
-        const body: any = {
-            schema: options?.schema || this.getSchema(),
-            table,
-            hash_values: hashes,
-        };
-        if ((options as any)?.attributes) body.get_attributes = (options as any).attributes;
-        const response = await this.executeQuery('search_by_hash', body, options);
-        return { data: (response as any)?.data ?? (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
-    async searchByValue<T = any>(table: string, searchAttribute: string, searchValue: any, options?: QueryOptions & { schema?: string; attributes?: string[]; limit?: number; offset?: number }): Promise<QueryResult<T[]>> {
-        const startTime = Date.now();
-        const body: any = {
-            schema: options?.schema || this.getSchema(),
-            table,
-            search_attribute: searchAttribute,
-            search_value: searchValue,
-        };
-        if ((options as any)?.attributes) body.get_attributes = (options as any).attributes;
-        if ((options as any)?.limit !== undefined) body.limit = (options as any).limit;
-        if ((options as any)?.offset !== undefined) body.offset = (options as any).offset;
-        const response = await this.executeQuery('search_by_value', body, options);
-        return { data: (response as any)?.data ?? (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
     async searchByConditions<T = any>(table: string, conditions: any[], options?: QueryOptions & { schema?: string; attributes?: string[]; limit?: number; offset?: number; operator?: 'and' | 'or' }): Promise<QueryResult<T[]>> {
         const startTime = Date.now();
         const body: any = {
@@ -120,41 +72,6 @@ export class HarperDB extends HarperDBClient {
         const startTime = Date.now();
         const response = await this.executeQuery('get_job', { job_id: jobId }, options);
         return { data: (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
-    // Users
-    async addUser(options: UserOptions): Promise<QueryResult<any>> {
-        const startTime = Date.now();
-        const response = await this.executeQuery('add_user', {
-            username: options.username,
-            password: options.password,
-            role: options.role || 'user',
-            active: options.active !== false,
-        }, options);
-        return { data: (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
-    async alterUser(options: AlterUserOptions): Promise<QueryResult<any>> {
-        const startTime = Date.now();
-        const response = await this.executeQuery('alter_user', {
-            username: options.username,
-            ...(options.password ? { password: options.password } : {}),
-            ...(options.role ? { role: options.role } : {}),
-            ...(options.active !== undefined ? { active: options.active } : {}),
-        }, options);
-        return { data: (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
-    async dropUser(username: string, options?: QueryOptions): Promise<QueryResult<any>> {
-        const startTime = Date.now();
-        const response = await this.executeQuery('drop_user', { username }, options);
-        return { data: (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
-    async listUsers(options?: QueryOptions): Promise<QueryResult<any[]>> {
-        const startTime = Date.now();
-        const response = await this.executeQuery('list_users', {}, options);
-        return { data: (response as any)?.users ?? (response as any), metadata: { executionTime: Date.now() - startTime } };
     }
 
     // Export/Import & Backup
@@ -212,12 +129,6 @@ export class HarperDB extends HarperDBClient {
             ...(options?.search_values ? { search_values: (options as any).search_values } : {}),
         }, options);
         return { data: (response as any)?.data ?? (response as any), metadata: { executionTime: Date.now() - startTime } };
-    }
-
-    async systemInformation(options?: QueryOptions): Promise<QueryResult<any>> {
-        const startTime = Date.now();
-        const response = await this.executeQuery('system_information', {}, options);
-        return { data: (response as any), metadata: { executionTime: Date.now() - startTime } };
     }
 
     async insert<T = any>(table: string, record: T, options?: InsertOptions): Promise<QueryResult<T>> {
