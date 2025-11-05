@@ -34,6 +34,12 @@ jobs:
             npm install
           fi
 
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
