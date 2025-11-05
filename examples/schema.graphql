@@ -60,7 +60,7 @@ type TokenLog @table(database: "data", replicate: false) @export {
 type Token @table(database: "data", replicate: false) @export {
     tokenId: String @primaryKey @indexed
     concurrent: Int @indexed
-    hits1min: Int @indexed`
+    hits1min: Int @indexed
     hits5min: Int @indexed
     hits15min: Int @indexed
     lastUpdated: Date @indexed

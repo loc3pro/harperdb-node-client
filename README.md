@@ -32,7 +32,7 @@ npm install harperdb-node-client
 ## Quick Start
 
 ```typescript
-import HarperDB from 'harperdb-node-client';llll         
+import HarperDB from 'harperdb-node-client';        
 
 const db = new HarperDB({
   url: 'https://your-instance.harperdbcloud.com',
@@ -355,10 +355,10 @@ const result = await db.applySchemaFromFile('schema.graphql', {
 
 console.log(result.data);
 // {
-//   schemasCreated: ['token_ban'],
-//   tablesCreated: ['token_ban.Whitelist', 'token_ban.Admin', ...],
-//   attributesCreated: ['token_ban.Whitelist.id', 'token_ban.Whitelist.tokenId', ...],
-//   indexesCreated: ['token_ban.Whitelist.tokenId', ...],
+//   schemasCreated: ['data'],
+//   tablesCreated: ['data.Whitelist', 'data.Admin', ...],
+//   attributesCreated: ['data.Whitelist.id', 'data.Whitelist.tokenId', ...],
+//   indexesCreated: ['data.Whitelist.tokenId', ...],
 //   errors: []
 // }
 
@@ -404,7 +404,7 @@ The package automatically validates schema files before processing:
 
 **Example Schema File (schema.graphql):**
 ```graphql
-type Whitelist @table(database: "token_ban") @export {
+type Whitelist @table(database: "data") @export {
     id: ID @primaryKey @indexed
     tokenId: String @indexed
     path: String
@@ -413,7 +413,7 @@ type Whitelist @table(database: "token_ban") @export {
     createdOn: Date
 }
 
-type Admin @table(database: "token_ban") @export {
+type Admin @table(database: "data") @export {
     id: ID @primaryKey @indexed
     username: String! @indexed
     password: String!
