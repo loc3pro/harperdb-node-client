@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
+          always-auth: true
 
       - name: Install deps
         run: |
@@ -68,7 +69,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           # Explicitly configure npm auth to avoid ENEEDAUTH
-          npm config set //registry.npmjs.org/:_authToken "$NODE_AUTH_TOKEN"
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          npm config set always-auth true
+          npm whoami || (echo "npm auth failed" && exit 1)
           npm publish --access public
 
 
