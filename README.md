@@ -74,6 +74,15 @@ await db.delete('users', '1');
 
 ## API Reference
 
+### Additional Operations (new)
+
+- Describe/List: `describeTable`, `describeSchema`, `listSchemas`, `listTables`, `describeAll`
+- Search: `searchByHash`, `searchByValue`, `searchByConditions`
+- Logs/Jobs: `readTransactionLog`, `readAuditLog`, `getJob`, `deleteTransactionLogsBefore`, `deleteRecordsBefore`
+- System: `systemInformation`
+- Users: `addUser`, `alterUser`, `dropUser`, `listUsers`
+- Export/Backup: `exportSchema`, `importSchema`, `backupInstance`, `restoreInstance`
+
 ### Initialization
 
 ```typescript
