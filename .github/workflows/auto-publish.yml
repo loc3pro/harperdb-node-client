@@ -71,7 +71,7 @@ jobs:
         run: |
           # Explicitly configure npm auth to avoid ENEEDAUTH
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          npm config set always-auth true
+          echo "always-auth=true" >> ~/.npmrc
           npm whoami || (echo "npm auth failed" && exit 1)
           npm publish --access public
 
