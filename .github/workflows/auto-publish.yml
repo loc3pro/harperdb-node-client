@@ -37,6 +37,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      - name: Ensure branch is up-to-date
+        run: |
+          BRANCH="${GITHUB_REF_NAME}"
+          git fetch origin "$BRANCH"
+          git rebase "origin/$BRANCH" || git rebase --abort
+
       - name: Bump version (patch) and create tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,6 +54,10 @@ jobs:
           fi
           NEW_VERSION=$(npm version patch -m "chore(release): %s [skip ci]")
           echo "Bumped to $NEW_VERSION"
+          BRANCH="${GITHUB_REF_NAME}"
+          # In case someone pushed in between bump and push
+          git fetch origin "$BRANCH"
+          git pull --rebase origin "$BRANCH" || true
           git push --follow-tags
 
       - name: Build
@@ -57,6 +67,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          # Explicitly configure npm auth to avoid ENEEDAUTH
+          npm config set //registry.npmjs.org/:_authToken "$NODE_AUTH_TOKEN"
           npm publish --access public
 
 
