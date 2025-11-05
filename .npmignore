@@ -1,0 +1,12 @@
+src/
+node_modules/
+*.log
+*.tsbuildinfo
+.eslintrc.json
+.eslint*
+.gitignore
+test-project/
+tests/
+coverage/
+examples/
+
